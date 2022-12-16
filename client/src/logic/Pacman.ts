@@ -13,7 +13,11 @@ export default class Pacman {
   }
   public draw(p5: p5Types) {
     p5.fill(255, 255, 0);
-    p5.rect(this.m_position.x, this.m_position.y, SCALE, SCALE);
+    p5.circle(
+      this.m_position.x + SCALE / 2,
+      this.m_position.y + SCALE / 2,
+      SCALE
+    );
   }
   public update(p5: p5Types) {
     this.m_position.x += this.m_speed.x * SCALE;
