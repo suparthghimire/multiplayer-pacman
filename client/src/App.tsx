@@ -2,14 +2,26 @@ import Sketch from "react-p5";
 import p5Types from "p5";
 import { useState } from "react";
 import Pacman from "./logic/Pacman";
+import Wall from "./logic/Wall";
+import { SCALE } from "./utils/utils";
 function App() {
   const [pacman, setPacman] = useState<Pacman>();
+  const [walls, setWalls] = useState<Wall[]>([]);
 
   function setup(p5: p5Types, canvasParentRef: Element) {
     p5.createCanvas(700, 700).parent(canvasParentRef);
     p5.background("black");
     p5.frameRate(10);
-    setPacman(new Pacman(p5));
+    setPacman(new Pacman(p5.createVector(10, 10)));
+
+    Array(10)
+      .fill(null)
+      .forEach((_, idx) => {
+        const wall = new Wall(
+          p5.createVector(idx * SCALE, Math.floor(p5.width / 2))
+        );
+        setWalls((walls) => [...walls, wall]);
+      });
   }
 
   function draw(p5: p5Types) {
@@ -19,6 +31,7 @@ function App() {
       pacman.draw(p5);
       pacman.update(p5);
     }
+    walls.forEach((wall) => wall.draw(p5));
   }
   function keyPressed(p5: p5Types) {
     if (pacman) {
