@@ -7,4 +7,7 @@ export default class Wall {
     p5.noStroke();
     p5.rect(this.m_position.x, this.m_position.y, SCALE, SCALE);
   }
+  get position() {
+    return this.m_position;
+  }
 }

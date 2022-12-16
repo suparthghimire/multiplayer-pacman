@@ -18,12 +18,10 @@ function App() {
   function draw(p5: p5Types) {
     p5.background("black");
     p5.fill(255);
-    if (pacman) {
+    if (pacman && map) {
       pacman.draw(p5);
-      pacman.update(p5);
-    }
-    if (map) {
       map.draw(p5);
+      pacman.update(p5, map.walls);
     }
   }
   function keyPressed(p5: p5Types) {
