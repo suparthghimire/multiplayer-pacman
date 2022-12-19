@@ -6,4 +6,5 @@ export enum CELL_CONTENT {
   PACMAN,
   GHOST,
   POWER_PELLET,
+  GATE,
 }

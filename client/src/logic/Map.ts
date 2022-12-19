@@ -19,6 +19,19 @@ export default class Map {
   private create(p5: p5Types) {
     this.generateMap(p5);
   }
+  public loadMap(p5: p5Types, map: number[][]) {
+    for (let i = 0; i < map.length; i++) {
+      const cells = [];
+      for (let j = 0; j < map[i].length; j++) {
+        if (map[i][j] === 1) {
+          cells.push(new Cell(CELL_CONTENT.WALL, p5.createVector(i, j)));
+        } else {
+          cells.push(new Cell(CELL_CONTENT.FOOD, p5.createVector(i, j)));
+        }
+      }
+      this.m_cells.push(cells);
+    }
+  }
   private generateMap(p5: p5Types) {
     const XLEN = p5.width / SCALE;
     const YLEN = p5.height / SCALE;
