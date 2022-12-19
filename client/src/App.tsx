@@ -10,7 +10,7 @@ function App() {
   function setup(p5: p5Types, canvasParentRef: Element) {
     p5.createCanvas(700, 700).parent(canvasParentRef);
     p5.background("black");
-    p5.frameRate(10);
+    p5.frameRate(24);
     setPacman(new Pacman(p5.createVector(0, 0)));
     setMap(new Map(p5));
   }
@@ -21,12 +21,11 @@ function App() {
     if (pacman && map) {
       pacman.draw(p5);
       map.draw(p5);
-      pacman.update(p5, map.walls);
+      pacman.update(p5, map.cells);
     }
   }
   function keyPressed(p5: p5Types) {
     if (pacman) {
-      console.log("PACMAN");
       const keyCode = p5.keyCode;
       switch (keyCode) {
         case p5.UP_ARROW:

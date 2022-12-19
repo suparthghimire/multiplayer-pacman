@@ -1,5 +1,7 @@
 import p5Types from "p5";
-import { SCALE } from "../utils/utils";
+import Helper from "../utils/helpers";
+import { CELL_CONTENT, SCALE } from "../utils/utils";
+import Cell from "./Cell";
 import Wall from "./Wall";
 export default class Pacman {
   private m_speed = {
@@ -20,24 +22,32 @@ export default class Pacman {
       SCALE
     );
   }
-  public update(p5: p5Types, walls: Wall[]) {
+  public update(p5: p5Types, cells: Cell[][]) {
     const newPositionX = this.m_position.x + this.m_speed.x * SCALE;
     const newPositionY = this.m_position.y + this.m_speed.y * SCALE;
 
-    // see if new position has a wall on it
-    const wall = walls.find((wall) => {
-      return (
-        wall.position.x === newPositionX && wall.position.y === newPositionY
-      );
-    });
+    const cellX = Math.floor(newPositionX / SCALE);
+    const cellY = Math.floor(newPositionY / SCALE);
 
-    if (wall) return;
+    const maxCellX = Math.floor(p5.width / SCALE) - 1;
+    const maxCellY = Math.floor(p5.height / SCALE) - 1;
+    const minCellX = 0;
+    const minCellY = 0;
+
+    if (
+      cellX >= minCellX &&
+      cellX <= maxCellX &&
+      cellY >= minCellY &&
+      cellY <= maxCellY
+    ) {
+      if (cells[cellX][cellY].content === CELL_CONTENT.WALL) {
+        return;
+      }
+    }
 
     this.m_position.x += this.m_speed.x * SCALE;
     this.m_position.y += this.m_speed.y * SCALE;
-
-    // constraint
-    this.m_position.x = p5.constrain(this.m_position.x, 0, p5.width - SCALE);
-    this.m_position.y = p5.constrain(this.m_position.y, 0, p5.height - SCALE);
+    this.m_position.x = Helper.Mod(Math.floor(this.m_position.x), p5.width);
+    this.m_position.y = Helper.Mod(Math.floor(this.m_position.y), p5.height);
   }
 }

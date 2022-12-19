@@ -1,13 +1,8 @@
 import { SCALE } from "./../utils/utils";
 import p5Types from "p5";
 export default class Wall {
-  constructor(private m_position: p5Types.Vector) {}
-  public draw(p5: p5Types) {
+  public static draw(p5: p5Types, position: p5Types.Vector) {
     p5.fill("white");
-    p5.noStroke();
-    p5.rect(this.m_position.x, this.m_position.y, SCALE, SCALE);
-  }
-  get position() {
-    return this.m_position;
+    p5.rect(position.x * SCALE, position.y * SCALE, SCALE, SCALE);
   }
 }
