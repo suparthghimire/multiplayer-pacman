@@ -7,13 +7,14 @@ import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Game() {
   const [pacman, setPacman] = useState<Pacman>();
+  const [pacmanWon, setPacmanWon] = useState<boolean>(false);
   const [mapState, setMapState] = useState<Map>();
   const { GetItem } = useLocalStorage();
 
   function setup(p5: p5Types, canvasParentRef: Element) {
     p5.createCanvas(700, 700).parent(canvasParentRef);
     p5.background("black");
-    p5.frameRate(24);
+    p5.frameRate(10);
 
     let loadMap: number[][] | undefined = undefined;
     const mapString = GetItem("map");
@@ -22,7 +23,6 @@ export default function Game() {
     const map = new Map(p5, loadMap);
 
     setMapState(map);
-    console.log(map.pacmanPos);
     setPacman(new Pacman(p5.createVector(map.pacmanPos.x, map.pacmanPos.y)));
   }
 
@@ -32,10 +32,16 @@ export default function Game() {
     if (pacman && mapState) {
       pacman.draw(p5);
       mapState.draw(p5);
-      pacman.update(p5, mapState.cells);
+      pacman.update(p5, mapState.cells, mapState.foodCount);
+
+      if (mapState.foodCount === 0) {
+        setPacmanWon(true);
+        return;
+      }
     }
   }
   function keyPressed(p5: p5Types) {
+    if (pacmanWon) return;
     if (pacman) {
       const keyCode = p5.keyCode;
       switch (keyCode) {
@@ -56,5 +62,11 @@ export default function Game() {
       }
     }
   }
-  return <Sketch draw={draw} setup={setup} keyPressed={keyPressed} />;
+
+  return (
+    <div>
+      Status: {pacmanWon ? "Pacman won!" : "Playing"}
+      <Sketch draw={draw} setup={setup} keyPressed={keyPressed} />
+    </div>
+  );
 }

@@ -7,7 +7,6 @@ import { CELL_CONTENT, SCALE } from "../utils/utils";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function Editor() {
-  const [pacman, setPacman] = useState<Pacman>();
   const [map, setMap] = useState<Map>();
   const [pressedKey, setPressedKey] = useState<number>(0);
 
@@ -26,35 +25,9 @@ export default function Editor() {
     p5.fill(255);
     if (map) {
       map.draw(p5);
-      if (pacman) {
-        pacman.draw(p5);
-        pacman.update(p5, map.cells);
-      }
     }
   }
 
-  function keyPressed(p5: p5Types) {
-    const keyCode = p5.keyCode;
-    setPressedKey(keyCode);
-    if (pacman) {
-      switch (keyCode) {
-        case p5.UP_ARROW:
-          pacman.direction(p5.createVector(0, -1));
-          break;
-        case p5.DOWN_ARROW:
-          pacman.direction(p5.createVector(0, 1));
-          break;
-        case p5.LEFT_ARROW:
-          pacman.direction(p5.createVector(-1, 0));
-          break;
-        case p5.RIGHT_ARROW:
-          pacman.direction(p5.createVector(1, 0));
-          break;
-        default:
-          break;
-      }
-    }
-  }
   function mouseClicked(p5: p5Types) {
     const x = Math.floor(p5.mouseX / SCALE);
     const y = Math.floor(p5.mouseY / SCALE);
@@ -85,7 +58,6 @@ export default function Editor() {
       <Sketch
         draw={draw}
         setup={setup}
-        keyPressed={keyPressed}
         mouseDragged={mouseClicked}
         mouseClicked={mouseClicked}
         keyReleased={() => setPressedKey(0)}

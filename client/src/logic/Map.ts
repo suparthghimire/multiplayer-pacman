@@ -1,22 +1,14 @@
 import { CELL_CONTENT, SCALE } from "./../utils/utils";
 import p5Types from "p5";
-import Wall from "./Wall";
-import Food from "./Food";
 import Cell from "./Cell";
 
 export default class Map {
   private m_cells: Cell[][] = [];
-  private m_foods: Food[] = [];
   private m_pacmanPos = { x: 0, y: 0 };
-
-  private m_walls: Wall[] = [];
-  private m_width: number;
-  private m_height: number;
+  private m_foodCount = 0;
   constructor(p5: p5Types, mapData?: number[][]) {
     this.initializeCell(p5);
     this.create(p5, mapData);
-    this.m_width = p5.width / SCALE;
-    this.m_height = p5.height / SCALE;
   }
   private initializeCell(p5: p5Types) {
     const XLEN = p5.width / SCALE;
@@ -47,6 +39,7 @@ export default class Map {
             cells.push(new Cell(CELL_CONTENT.WALL, p5.createVector(i, j)));
           } else {
             cells.push(new Cell(CELL_CONTENT.FOOD, p5.createVector(i, j)));
+            this.m_foodCount++;
           }
         } else {
           cells.push(new Cell(CELL_CONTENT.EMPTY, p5.createVector(i, j)));
@@ -56,7 +49,7 @@ export default class Map {
     }
 
     if (map.length > 0) {
-      const pacmanPosition = p5.createVector(1040, 2000);
+      const pacmanPosition = p5.createVector(100, 200);
       this.m_pacmanPos = pacmanPosition;
     } else {
       const pacmanPosition = p5.createVector(0, 0);
@@ -75,14 +68,14 @@ export default class Map {
           cells.push(new Cell(CELL_CONTENT.WALL, p5.createVector(i, j)));
         } else {
           cells.push(new Cell(CELL_CONTENT.FOOD, p5.createVector(i, j)));
+          this.m_foodCount++;
         }
       }
       this.m_cells.push(cells);
     }
 
-    console.log(this.m_cells);
     // get random position for pacman
-    const pacmanPosition = p5.createVector(1040, 2000);
+    const pacmanPosition = p5.createVector(0, 0);
     this.m_pacmanPos = pacmanPosition;
   }
 
@@ -121,19 +114,27 @@ export default class Map {
   get cells() {
     return this.m_cells;
   }
-  get code() {
-    this.cells.forEach((row, rIdx) => {
-      row.forEach((cell, cIdx) => {
-        const content = cell.content;
-      });
-    });
-    return "";
-  }
+
   get content() {
     return this.m_cells.map((row) => row.map((cell) => cell.content));
   }
 
   get pacmanPos() {
     return this.m_pacmanPos;
+  }
+  get foodCount() {
+    const totalFood = this.m_cells.reduce((acc, row) => {
+      return (
+        acc +
+        row.reduce((acc, cell) => {
+          return cell.content === CELL_CONTENT.FOOD ? acc + 1 : acc;
+        }, 0)
+      );
+    }, 0);
+
+    return totalFood;
+  }
+  set foodCount(foodCount: number) {
+    this.m_foodCount = foodCount;
   }
 }

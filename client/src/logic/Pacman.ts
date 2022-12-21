@@ -2,7 +2,6 @@ import p5Types from "p5";
 import Helper from "../utils/helpers";
 import { CELL_CONTENT, SCALE } from "../utils/utils";
 import Cell from "./Cell";
-import Wall from "./Wall";
 export default class Pacman {
   private m_speed = {
     x: 0,
@@ -22,7 +21,7 @@ export default class Pacman {
       SCALE
     );
   }
-  public update(p5: p5Types, cells: Cell[][]) {
+  public update(p5: p5Types, cells: Cell[][], foodCount: number) {
     const newPositionX = this.m_position.x + this.m_speed.x * SCALE;
     const newPositionY = this.m_position.y + this.m_speed.y * SCALE;
 
@@ -49,5 +48,14 @@ export default class Pacman {
     this.m_position.y += this.m_speed.y * SCALE;
     this.m_position.x = Helper.Mod(Math.floor(this.m_position.x), p5.width);
     this.m_position.y = Helper.Mod(Math.floor(this.m_position.y), p5.height);
+
+    this.eat(cells, foodCount);
+  }
+  public eat(cells: Cell[][], foodCount: number) {
+    const cellX = Math.floor(this.m_position.x / SCALE);
+    const cellY = Math.floor(this.m_position.y / SCALE);
+    if (cells[cellX][cellY].content === CELL_CONTENT.FOOD) {
+      cells[cellX][cellY].content = CELL_CONTENT.EMPTY;
+    }
   }
 }

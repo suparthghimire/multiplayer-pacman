@@ -25,4 +25,7 @@ export default class Cell {
   get content() {
     return this.m_content;
   }
+  set content(content: CELL_CONTENT) {
+    this.m_content = content;
+  }
 }

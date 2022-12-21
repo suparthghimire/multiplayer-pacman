@@ -1,4 +1,4 @@
-export const SCALE = 20;
+export const SCALE = 100;
 export enum CELL_CONTENT {
   EMPTY,
   WALL,
